@@ -5,7 +5,7 @@ import 'package:project/profile/users_specific.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({Key? key}) : super(key: key);
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -19,9 +19,9 @@ class _LoginPageState extends State<LoginPage> {
   String passwordInput = "";
 
   var userNameValidator =
-      ValidationBuilder(requiredMessage: "UserName is required!").build();
+  ValidationBuilder(requiredMessage: "UserName is required!").build();
   var passwordValidator =
-      ValidationBuilder(requiredMessage: "Password is required!").build();
+  ValidationBuilder(requiredMessage: "Password is required!").build();
 
   bool isError = false;
 
@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 //app logo
                 Image.asset(
-                  'images/caltrack_image.png',
+                  'lib/images/caltrack_image.png',
                   height: 200,
                   width: 200,
                 ),
@@ -54,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 15),
+                const SizedBox(height: 35),
 
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -70,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                         validator: userNameValidator,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
-                          hintText: "UserName",
+                          hintText: "Username",
                           prefixIcon: Icon(
                             Icons.account_circle,
                             color: Color.fromARGB(255, 180, 140, 255),
@@ -134,15 +134,15 @@ class _LoginPageState extends State<LoginPage> {
                         debugPrint(_formKey.currentState.toString());
 
                         var loginResult = context.read<UserSpecific>().login(
-                              userNameInput,
-                              passwordInput,
-                            );
+                          userNameInput,
+                          passwordInput,
+                        );
 
                         if (loginResult == false) {
                           setState((() => isError = true));
                         } else {
                           setState((() => isError = false));
-                      // Use GoRouter to navigate to the home page ("/home") after successful login
+                          // Use GoRouter to navigate to the home page ("/home") after successful login
                           GoRouter.of(context).go("/home");
                         }
 
@@ -150,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                       }
                     },
                     child: Container(
-                      padding: const EdgeInsets.all(20),
+                      padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
                         color: const Color.fromARGB(255, 180, 140, 255),
                         borderRadius: BorderRadius.circular(12),
@@ -171,11 +171,11 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 8),
                 isError == true
                     ? const Text(
-                        "There is no account found, please try again",
-                        style: TextStyle(color: Colors.red),
-                      )
+                  "There is no account found, please try again",
+                  style: TextStyle(color: Colors.red),
+                )
                     : const SizedBox(),
-                const SizedBox(height: 12),
+                const SizedBox(height: 9),
 
                 // not a member? register now
                 Row(
