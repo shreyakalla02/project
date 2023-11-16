@@ -1,4 +1,4 @@
-# Project
+# CALTrack
 
 A new Flutter project.
 
