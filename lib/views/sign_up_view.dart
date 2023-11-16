@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:project/profile/users_specific.dart';
+import 'package:project/view_models//users_specific_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:form_validator/form_validator.dart';
 

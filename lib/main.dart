@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:project/profile/login.dart';
-import 'package:project/profile/sign_up.dart';
-import 'package:project/dashboard/dashboard.dart';
+import 'package:project/views/login_view.dart';
+import 'package:project/views/sign_up_view.dart';
+import 'package:project/views/dashboard_view.dart';
 
 void main() {
   runApp(MyApp());

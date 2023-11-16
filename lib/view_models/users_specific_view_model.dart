@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'users.dart';
+import 'package:project/models/users.dart';
 
 final Map<String, Users> initialData = {
   "sarah02": Users(
@@ -135,12 +135,6 @@ class UserSpecific with ChangeNotifier {
   }
 
   void logout() {
-    _currentUser = null;
-    notifyListeners();
-  }
-
-  void deleteAccount() {
-    _userDatabase.remove(_currentUser!.userName);
     _currentUser = null;
     notifyListeners();
   }
