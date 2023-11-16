@@ -16,6 +16,12 @@ class _DashboardPageState extends State<DashboardPage> {
   bool showResults = false; // Flag to control the visibility of results
   List<String> results = []; // List to store multiple results
 
+  // Hard-coded values for testing
+  String heightInput = '64'; // in inches
+  String weightInput = '110'; // in lbs
+  String selectedGender = 'Female'; // 'Male' or 'Female'
+  String ageInput = '21'; // in years
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +30,7 @@ class _DashboardPageState extends State<DashboardPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 5),
+            const SizedBox(height: 20),
             Text(
               "Dashboard",
               style: GoogleFonts.adamina(
@@ -32,7 +38,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 fontSize: 40,
               ),
             ),
-            const SizedBox(height: 25),
+            const SizedBox(height: 15),
             Row(
               children: [
                 Text(
@@ -73,7 +79,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         selectedExerciseType = newValue!;
                       });
                     },
-                    items: <String>['Running', 'Cycling', 'Walking', 'Jogging']
+                    items: <String>['Running', 'Cycling', 'Walking', 'Swimming']
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -191,20 +197,21 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
               ],
             ),
-            SizedBox(height: 2),
+            SizedBox(height: 1),
             ElevatedButton(
               onPressed: () {
                 // Perform actions based on the selected activity type
                 if (selectedActivityType == 'Exercise') {
                   // Handle exercise activity
+                  double burnedCalories = calculateCalories();
                   String exerciseResult =
-                      'Exercise Type: $selectedExerciseType, Duration: $durationInput';
+                      'Exercise Type: $selectedExerciseType\nDuration: $durationInput\nBurned Calories: ${burnedCalories.toStringAsFixed(2)} calories';
                   print(exerciseResult);
                   results.add(exerciseResult); // Save result to the list
                 } else {
                   // Handle food activity
                   String foodResult =
-                      'Food Type: $selectedFoodType, Calories: $caloriesInput';
+                      'Food Type: $selectedFoodType\nCalories: ${caloriesInput}';
                   print(foodResult);
                   results.add(foodResult); // Save result to the list
                 }
@@ -225,18 +232,40 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
             ),
             if (showResults) ...[
-              SizedBox(height: 5),
+              SizedBox(height: 2),
               Text(
                 'Results:',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'BeautifulFont'),
               ),
-              SizedBox(height: 10),
-              for (String result in results) ...[
-                Text(
-                  result,
-                  style: TextStyle(fontFamily: 'BeautifulFont'),
+              SizedBox(height: 5),
+              Expanded(
+                child: Scrollbar(
+                  child: ListView(
+                    children: [
+                      for (String result in results) ...[
+                        Container(
+                          margin: EdgeInsets.symmetric(vertical: 5),
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.grey),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: result
+                                .split('\n')
+                                .map((line) => Text(
+                              line,
+                              style: TextStyle(fontFamily: 'BeautifulFont'),
+                            ))
+                                .toList(),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
                 ),
-              ],
+              ),
             ],
           ],
         ),
@@ -250,5 +279,52 @@ class _DashboardPageState extends State<DashboardPage> {
     for (String result in results) {
       print(result);
     }
+  }
+
+  double calculateCalories() {
+    double met;
+
+    // Convert height to inches and weight to lbs
+    double heightInInches = double.parse(heightInput);
+    double weightInLbs = double.parse(weightInput);
+
+    // Convert activity duration to hours
+    double durationInHours = double.parse(durationInput.split(' ')[0]) / 60;
+
+    // Calculate BMR based on gender
+    double bmr = (selectedGender.toLowerCase() == 'male')
+        ? (13.75 * (weightInLbs / 2.20462)) +
+        (5 * heightInInches) -
+        (6.76 * double.parse(ageInput)) +
+        66
+        : (9.56 * (weightInLbs / 2.20462)) +
+        (1.85 * heightInInches) -
+        (4.68 * double.parse(ageInput)) +
+        655;
+
+    // Assign MET based on selected exercise type
+    String activity = selectedExerciseType.toLowerCase();
+    switch (activity) {
+      case 'running':
+        met = 11.5;
+        break;
+      case 'walking':
+        met = 5;
+        break;
+      case 'cycling':
+        met = 8;
+        break;
+      case 'swimming':
+        met = 9.5;
+        break;
+      default:
+        met = 0;
+    }
+
+    // Calculate burned calories using the formula: Calorie Burn = (BMR / 24) x MET x T
+    //http://www.shapesense.com/fitness-exercise/calculators/activity-based-calorie-burn-calculator.aspx
+    double calorieBurn = (bmr / 24) * met * durationInHours;
+
+    return calorieBurn;
   }
 }
